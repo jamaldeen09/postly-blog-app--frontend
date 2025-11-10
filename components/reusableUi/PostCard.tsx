@@ -34,6 +34,17 @@ interface PostCardActionButtonProps {
   tooltipContent?: string;
 };
 
+
+export const formatViewCount = (count: number): string => {
+  if (count < 1000) {
+    return count.toString();
+  } else if (count < 1000000) {
+    return (count / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+  } else {
+    return (count / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+  }
+};
+
 const PostCardActionButton = (props: PostCardActionButtonProps): React.ReactElement => {
 
   return (
@@ -170,7 +181,7 @@ const PostCard = ({
                 )
               )}
 
-              <p className="text-gray-500 text-xs">{post.views} {post.views === 1 ? "view" : "views"}</p>
+              <p className="text-gray-500 text-xs">{formatViewCount(post.views)} {post.views === 1 ? "view" : "views"}</p>
             </div>
 
             {/* View Post Button */}

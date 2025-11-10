@@ -81,7 +81,7 @@ const Layout = ({ children }: {
             animationType="scale-into-view"
             trigger={getTrigger("postCreationModal")}
             overlayStyles="z-100 bg-black/70 min-h-screen flex justify-center py-6 items-center px-4"
-            modalStyles="w-full bg-white max-w-2xl h-full max-h-[80vh] overflow-y-auto rounded-sm p-10 element-scrollable-hidden-scrollbar"
+            modalStyles="w-full bg-white max-w-2xl h-full max-h-[80vh] overflow-y-auto rounded-sm p-8 md:p-10 element-scrollable-hidden-scrollbar"
             triggerName="postCreationModal"
             funcToMutateTrigger={mutateTrigger}
           >

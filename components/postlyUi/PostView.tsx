@@ -16,6 +16,7 @@ import CommentItemSkeleton from "./CommentItemSkeleton";
 import { CommentItem, formatTimeAgo } from "./CommentItem";
 import { useRouter, useSearchParams } from "next/navigation";
 import useResizer from "@/hooks/useResizer";
+import { formatViewCount } from "../reusableUi/PostCard";
 
 const PostView = React.memo(({ postId, onClose }: {
     postId: string,
@@ -454,6 +455,7 @@ const PostView = React.memo(({ postId, onClose }: {
     ]);
 
     const { isDesiredScreen } = useResizer(1024);
+    React.useEffect(() => console.log("POSTS AUTHOR: ", postBeingViewed?.author), [postBeingViewed])
     return (
         isArchivedErr.error ? (
             <div
@@ -466,7 +468,7 @@ const PostView = React.memo(({ postId, onClose }: {
                     {isArchivedErr.message}
                 </div>
             </div>
-        ) : isPostFetchOperationHappening || !postBeingViewed ? (
+        ) : isPostFetchOperationHappening || !postBeingViewed || !postBeingViewed.author ? (
             <div
                 className="w-full h-full flex justify-center items-center lg:rounded-sm"
             >
@@ -491,11 +493,11 @@ const PostView = React.memo(({ postId, onClose }: {
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center font-bold text-sm">
-                                    J
+                                    {profile.username.charAt(0).toUpperCase()}
                                 </div>
                                 <div>
-                                    <h1 className="text-lg font-semibold text-gray-900">{postBeingViewed?.author.username || "postly_user"}</h1>
-                                    <p className="text-sm text-gray-500">Posted: {formatTimeAgo(postBeingViewed?.createdAt || new Date().toISOString())}</p>
+                                    <h1 className="text-lg font-semibold text-gray-900">{postBeingViewed.author.username}</h1>
+                                    <p className="text-sm text-gray-500">Posted: {formatTimeAgo(postBeingViewed.createdAt || new Date().toISOString())}</p>
                                 </div>
                             </div>
 
@@ -551,20 +553,26 @@ const PostView = React.memo(({ postId, onClose }: {
                                     <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                                     </svg>
-                                    <span>{postBeingViewed?.likes || 0} {postBeingViewed?.likes === 1 ? "like" : "likes"}</span>
+                                    <span>
+                                        {formatViewCount(postBeingViewed?.likes || 0)} {postBeingViewed?.likes === 1 ? "like" : "likes"}
+                                    </span>
                                 </div>
                                 <div className="flex items-center gap-1">
                                     <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                                     </svg>
-                                    <span>{postBeingViewed?.comments || 0} {postBeingViewed?.comments === 1 ? "comment" : "comments"}</span>
+                                    <span>
+                                        {formatViewCount(postBeingViewed?.comments || 0)} {postBeingViewed?.comments === 1 ? "comment" : "comments"}
+                                    </span>
                                 </div>
                                 <div className="flex items-center gap-1">
                                     <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                     </svg>
-                                    <span>{postBeingViewed?.views || 0} {postBeingViewed?.views === 1 ? "view" : "views"}</span>
+                                    <span>
+                                        {formatViewCount(postBeingViewed?.views || 0)} {postBeingViewed?.views === 1 ? "view" : "views"}
+                                    </span>
                                 </div>
                             </div>
                         </div>

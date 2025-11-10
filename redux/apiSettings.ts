@@ -3,7 +3,7 @@ import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { ApiResult } from "@/types/auth";
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: "http://localhost:4080/api/v1",
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL,
     prepareHeaders: (headers) => {
         const token = localStorage.getItem("accessToken");
         if (token) {

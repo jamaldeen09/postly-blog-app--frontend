@@ -20,7 +20,7 @@ interface PaginationData<T> {
     offset: number;
     page: number;
     limit: number;
-    totalPages: number;
+    totalPages: number;   
     data: T;
 }
 

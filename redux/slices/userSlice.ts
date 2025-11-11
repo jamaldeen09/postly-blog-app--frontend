@@ -22,8 +22,8 @@ interface Profile {
 
 
 interface User {
-    profile: Profile;
-    authState: AuthState;
+    profile: Profile
+    authState: AuthState
 }
 
 // ** Initial state ** \\

@@ -7,8 +7,13 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
-import { useRouter } from "next/navigation";
 import { logout } from "@/redux/slices/userSlice";
+import { authApi, useLogoutMutation } from "@/redux/apis/authApi";
+import { callToast } from "@/providers/SonnerProvider";
+import { ApiResult } from "@/types/auth";
+import CustomSpinner from "../reusableUi/CustomSpinner";
+import blogPostApi from "@/redux/apis/blogPostApi";
+import profileApi from "@/redux/apis/profileApi";
 
 const UserProfileButton = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -33,7 +38,49 @@ const UserProfileButton = () => {
     }, [isOpen]);
 
     const dispatch = useAppDispatch();
-    const router = useRouter();
+
+    const [logOutClient, {
+        isLoading,
+        isError,
+        error,
+        data,
+        isSuccess,
+    }] = useLogoutMutation();
+
+    const logUserOut = async () => {
+        try {
+            return await logOutClient();
+        } catch (err) {
+            console.error(`Error occured in function "logUserOut" in file "UserProfileButton.tsx": ${err}`);
+            return callToast("error", "An unexpected error occured while trying to log you out of your account, please try again shortly");
+        }
+    };
+
+    useEffect(() => {
+        let isMounted = true;
+        if (isSuccess && !isError && !error) {
+            if (isMounted) {
+                dispatch(blogPostApi.util.resetApiState());
+                dispatch(profileApi.util.resetApiState());
+                dispatch(authApi.util.resetApiState());
+
+                dispatch(logout());
+                callToast("success", data.message);
+            }
+        }
+
+        if (isError && error && "data" in error && !isSuccess) {
+            if (isMounted) callToast("error", (error.data as ApiResult).message);
+        }
+    }, [
+        isSuccess,
+        isError,
+        data,
+        error,
+        dispatch,
+        callToast
+    ]);
+
     return (
         <div className="fixed right-5 bottom-5 z-50">
             {/* Dropdown Menu */}
@@ -59,20 +106,14 @@ const UserProfileButton = () => {
                         {/* Actions */}
                         <div className="space-y-2">
                             <Button
-                                onClick={() => {
-                                    if (typeof window !== "undefined") {
-                                        localStorage.removeItem("accessToken");
-                                        localStorage.removeItem("refreshToken");
-                                        dispatch(logout());
-                                        return router.push("/");
-                                    }
-                                }}
+                                disabled={isLoading}
+                                onClick={logUserOut}
                                 variant="ghost"
                                 className="w-full justify-start gap-3 h-10 text-red-600 hover:bg-red-50 hover:text-red-600
                                 cursor-pointer"
                             >
-                                <LogOut className="h-4 w-4" />
-                                Sign Out
+                                {isLoading ? <CustomSpinner className="text-red-600 size-4" /> : <LogOut className="h-4 w-4" />}
+                                {isLoading ? "Signing out" : "Sign Out"}
                             </Button>
                         </div>
                     </motion.div>

@@ -34,9 +34,9 @@ export default function RootLayout({
         className={`${poppins.className}`}
       >
         <ReduxProvider>
-            <SonnerProvider>
-                {children}
-            </SonnerProvider>
+          <SonnerProvider>
+            {children}
+          </SonnerProvider>
         </ReduxProvider>
       </body>
     </html>

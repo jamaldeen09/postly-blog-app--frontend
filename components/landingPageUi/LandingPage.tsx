@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import Hero from "./Hero";
 import useTrigger from "@/hooks/useTrigger";
@@ -9,6 +9,7 @@ import { createContext } from "react";
 import PublicRoute from "@/providers/PublicRoute";
 import Features from "./Features";
 import Footer from "./Footer";
+import { useAppSelector } from "@/redux/store";
 
 
 export const AuthContext = createContext<{
@@ -25,6 +26,9 @@ const LandingPage = (): React.ReactElement => {
     const { getTrigger, mutateTrigger } = useTrigger();
     const trigger = getTrigger("authModal");
 
+    const { authState, profile }= useAppSelector((state) => state.user)
+    useEffect(() => console.log("CURRENT AUTH STATE: ", authState), [authState]);
+    useEffect(() => console.log("CURRENT PROFILE: ", profile), [profile]);
 
     // ** Context values ** \\
     const [auth, setAuth] = useState<"signup" | "login">("signup");

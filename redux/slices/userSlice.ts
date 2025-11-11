@@ -70,6 +70,13 @@ const userSlice = createSlice({
                 email: "",
                 likedBlogPosts: [],
                 archivedBlogPosts: [],
+            };
+
+
+            if (typeof window !== "undefined") {
+                localStorage.removeItem("accessToken");
+                localStorage.removeItem("refreshToken");
+                localStorage.removeItem("userAuth");
             }
         },
 

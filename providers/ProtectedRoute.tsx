@@ -26,7 +26,7 @@ const ProtectedRoute = React.memo(({ children }: {
     React.useEffect(() => {
         if (!isPending && !authState.isAuthenticated) {
             router.push("/");
-        };
+        }
     }, [isPending, authState.isAuthenticated]);
 
     

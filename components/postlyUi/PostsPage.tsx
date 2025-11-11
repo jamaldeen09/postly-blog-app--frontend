@@ -333,134 +333,134 @@ const PostsPage = (): React.ReactElement => {
 
     // ** UseEffect to handle successful /failure cases for fetching all blog posts ** \\
     // ** UseEffect to handle successful /failure cases for fetching all blog posts ** \\
-    useEffect(() => {
-        let isMounted = true;
-        const successfullCases = allBlogPostsIsSuccess && !allBlogPostsError && !allBlogPostsError;
-        const failureCases = allBlogPostsError && "data" in allBlogPostsError && allBlogPostsIsError && !allBlogPostsIsSuccess;
+useEffect(() => {
+    let isMounted = true;
+    const successfullCases = allBlogPostsIsSuccess && !allBlogPostsError && !allBlogPostsError;
+    const failureCases = allBlogPostsError && "data" in allBlogPostsError && allBlogPostsIsError && !allBlogPostsIsSuccess;
 
-        if (successfullCases && activeView === "all-posts") { // Add condition
-            const typedData = (allBlogPostsData.data as ExpectedPaginationPayload);
-            if (isMounted) {
-                dispatch(getBlogPosts(typedData.paginationData.data));
-                setTotalPages(typedData.paginationData.totalPages);
-                scrollToMainDivTop();
-            }
+    if (successfullCases && activeView === "all-posts") { // Add condition
+        const typedData = (allBlogPostsData.data as ExpectedPaginationPayload);
+        if (isMounted) {
+            dispatch(getBlogPosts(typedData.paginationData.data));
+            setTotalPages(typedData.paginationData.totalPages);
+            scrollToMainDivTop();
         }
+    }
 
-        if (failureCases && activeView === "all-posts") { // Add condition
-            const typedError = (allBlogPostsError.data as ApiResult);
-            if (isMounted) callToast("error", typedError.message);
+    if (failureCases && activeView === "all-posts") { // Add condition
+        const typedError = (allBlogPostsError.data as ApiResult);
+        if (isMounted) callToast("error", typedError.message);
+    }
+    return () => { isMounted = false }
+}, [
+    allBlogPostsData,
+    allBlogPostsError,
+    allBlogPostsIsSuccess,
+    activeView, // ADD THIS
+    dispatch,
+    callToast,
+]);
+
+// ** UseEffect to handle successful /failure cases for fetching archived blog posts ** \\
+useEffect(() => {
+    let isMounted = true;
+    const successfullCases = archivedBlogPostsIsSuccess && !archivedBlogPostsIsError && !archivedBlogPostsError;
+    const failureCases = !archivedBlogPostsIsSuccess && archivedBlogPostsIsError && archivedBlogPostsError && "data" in archivedBlogPostsError;
+
+    if (successfullCases && activeView === "archived-posts") { // Add condition
+        const typedData = (archivedBlogPostsData.data as ExpectedPaginationPayload);
+        if (isMounted) {
+            dispatch(fetchBlogPosts({
+                blogPosts: typedData.paginationData.data,
+                postType: "archivedBlogPosts"
+            }));
+            setTotalPages(typedData.paginationData.totalPages);
+            scrollToMainDivTop();
         }
-        return () => { isMounted = false }
-    }, [
-        allBlogPostsData,
-        allBlogPostsError,
-        allBlogPostsIsSuccess,
-        activeView, // ADD THIS
-        dispatch,
-        callToast,
-    ]);
+    }
 
-    // ** UseEffect to handle successful /failure cases for fetching archived blog posts ** \\
-    useEffect(() => {
-        let isMounted = true;
-        const successfullCases = archivedBlogPostsIsSuccess && !archivedBlogPostsIsError && !archivedBlogPostsError;
-        const failureCases = !archivedBlogPostsIsSuccess && archivedBlogPostsIsError && archivedBlogPostsError && "data" in archivedBlogPostsError;
+    if (failureCases && activeView === "archived-posts") { // Add condition
+        const typedError = (archivedBlogPostsError.data as ApiResult);
+        if (isMounted) callToast("error", typedError.message);
+    }
+    return () => { isMounted = false }
+}, [
+    archivedBlogPostsIsSuccess,
+    archivedBlogPostsIsError,
+    archivedBlogPostsError,
+    archivedBlogPostsData,
+    activeView, // ADD THIS
+    dispatch,
+    callToast,
+]);
 
-        if (successfullCases && activeView === "archived-posts") { // Add condition
-            const typedData = (archivedBlogPostsData.data as ExpectedPaginationPayload);
-            if (isMounted) {
-                dispatch(fetchBlogPosts({
-                    blogPosts: typedData.paginationData.data,
-                    postType: "archivedBlogPosts"
-                }));
-                setTotalPages(typedData.paginationData.totalPages);
-                scrollToMainDivTop();
-            }
+// ** UseEffect to handle successful /failure cases for fetching created blog posts ** \\
+useEffect(() => {
+    let isMounted = true;
+    const successfullCases = createdBlogPostsIsSuccess && !createdBlogPostsError && !createdBlogPostsIsError;
+    const failureCases = !createdBlogPostsIsSuccess && createdBlogPostsError && createdBlogPostsIsError && "data" in createdBlogPostsError;
+
+    if (successfullCases && activeView === "my-posts") { // Add condition
+        const typedData = (createdBlogPostsData.data as ExpectedPaginationPayload);
+        if (isMounted) {
+            dispatch(fetchBlogPosts({
+                blogPosts: typedData.paginationData.data,
+                postType: "createdBlogPosts"
+            }));
+            setTotalPages(typedData.paginationData.totalPages);
+            scrollToMainDivTop();
         }
+    };
 
-        if (failureCases && activeView === "archived-posts") { // Add condition
-            const typedError = (archivedBlogPostsError.data as ApiResult);
-            if (isMounted) callToast("error", typedError.message);
+    if (failureCases && activeView === "my-posts") { // Add condition
+        const typedError = (createdBlogPostsError.data as ApiResult);
+        if (isMounted) callToast("error", typedError.message);
+    };
+
+    return () => { isMounted = false };
+}, [
+    createdBlogPostsData,
+    createdBlogPostsError,
+    createdBlogPostsIsError,
+    createdBlogPostsIsSuccess,
+    activeView, // ADD THIS
+    dispatch,
+    callToast,
+]);
+
+// ** UseEffect to handle successful /failure cases for fetching liked blog posts ** \\
+useEffect(() => {
+    let isMounted = true;
+    const successfullCases = likedBlogPostsIsSuccess && !likedBlogPostsError && !likedBlogPostsIsError;
+    const failureCases = !likedBlogPostsIsSuccess && likedBlogPostsError && likedBlogPostsIsError && "data" in likedBlogPostsError;
+
+    if (successfullCases && activeView === "liked-posts") { // Add condition
+        const typedData = (likedBlogPostsData.data as ExpectedPaginationPayload);
+        if (isMounted) {
+            dispatch(fetchBlogPosts({
+                blogPosts: typedData.paginationData.data,
+                postType: "likedBlogPosts"
+            }));
+            setTotalPages(typedData.paginationData.totalPages);
+            scrollToMainDivTop();
         }
-        return () => { isMounted = false }
-    }, [
-        archivedBlogPostsIsSuccess,
-        archivedBlogPostsIsError,
-        archivedBlogPostsError,
-        archivedBlogPostsData,
-        activeView, // ADD THIS
-        dispatch,
-        callToast,
-    ]);
+    };
 
-    // ** UseEffect to handle successful /failure cases for fetching created blog posts ** \\
-    useEffect(() => {
-        let isMounted = true;
-        const successfullCases = createdBlogPostsIsSuccess && !createdBlogPostsError && !createdBlogPostsIsError;
-        const failureCases = !createdBlogPostsIsSuccess && createdBlogPostsError && createdBlogPostsIsError && "data" in createdBlogPostsError;
+    if (failureCases && activeView === "liked-posts") { // Add condition
+        const typedError = (likedBlogPostsError.data as ApiResult);
+        if (isMounted) callToast("error", typedError.message);
+    };
 
-        if (successfullCases && activeView === "my-posts") { // Add condition
-            const typedData = (createdBlogPostsData.data as ExpectedPaginationPayload);
-            if (isMounted) {
-                dispatch(fetchBlogPosts({
-                    blogPosts: typedData.paginationData.data,
-                    postType: "createdBlogPosts"
-                }));
-                setTotalPages(typedData.paginationData.totalPages);
-                scrollToMainDivTop();
-            }
-        };
-
-        if (failureCases && activeView === "my-posts") { // Add condition
-            const typedError = (createdBlogPostsError.data as ApiResult);
-            if (isMounted) callToast("error", typedError.message);
-        };
-
-        return () => { isMounted = false };
-    }, [
-        createdBlogPostsData,
-        createdBlogPostsError,
-        createdBlogPostsIsError,
-        createdBlogPostsIsSuccess,
-        activeView, // ADD THIS
-        dispatch,
-        callToast,
-    ]);
-
-    // ** UseEffect to handle successful /failure cases for fetching liked blog posts ** \\
-    useEffect(() => {
-        let isMounted = true;
-        const successfullCases = likedBlogPostsIsSuccess && !likedBlogPostsError && !likedBlogPostsIsError;
-        const failureCases = !likedBlogPostsIsSuccess && likedBlogPostsError && likedBlogPostsIsError && "data" in likedBlogPostsError;
-
-        if (successfullCases && activeView === "liked-posts") { // Add condition
-            const typedData = (likedBlogPostsData.data as ExpectedPaginationPayload);
-            if (isMounted) {
-                dispatch(fetchBlogPosts({
-                    blogPosts: typedData.paginationData.data,
-                    postType: "likedBlogPosts"
-                }));
-                setTotalPages(typedData.paginationData.totalPages);
-                scrollToMainDivTop();
-            }
-        };
-
-        if (failureCases && activeView === "liked-posts") { // Add condition
-            const typedError = (likedBlogPostsError.data as ApiResult);
-            if (isMounted) callToast("error", typedError.message);
-        };
-
-        return () => { isMounted = false };
-    }, [
-        likedBlogPostsData,
-        likedBlogPostsError,
-        likedBlogPostsIsError,
-        likedBlogPostsIsSuccess,
-        activeView,
-        dispatch,
-        callToast,
-    ]);
+    return () => { isMounted = false };
+}, [
+    likedBlogPostsData,
+    likedBlogPostsError,
+    likedBlogPostsIsError,
+    likedBlogPostsIsSuccess,
+    activeView, 
+    dispatch,
+    callToast,
+]);
 
     const getTotalPostsConditionally = () => {
         if (activeView === "all-posts") {

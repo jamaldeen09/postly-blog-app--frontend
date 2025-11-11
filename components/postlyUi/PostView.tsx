@@ -274,7 +274,7 @@ const PostView = React.memo(({ postId, onClose }: {
                         router.push(`?${params.toString()}`, { scroll: false });
 
                         // ** Refetch liked blog posts ** \\\
-                        fetchLikedBlogPosts({ page: "1", _t: Date.now() });
+                        fetchLikedBlogPosts({ page: "1" });
                     }
                 }
             }

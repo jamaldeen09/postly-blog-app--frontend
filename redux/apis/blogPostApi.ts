@@ -3,12 +3,9 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 import { ApiResult } from "@/types/auth";
 import { baseQueryWithReauth } from "../apiSettings";
 
-
-
 interface BlogPostsFetchExpectedData {
     page?: string,
     searchQuery?: string,
-    _t?: number;
 };
 
 // ** Api definition ** \\
@@ -17,19 +14,19 @@ const blogPostApi = createApi({
     baseQuery: baseQueryWithReauth,
     endpoints: (builder) => ({
         getBlogPosts: builder.query<ApiResult, BlogPostsFetchExpectedData>({
-            query: (body) => `/posts?page=${body.page}${body.searchQuery ? `&searchQuery=${body.searchQuery}` : ""}${body._t ? `&_t=${body._t}` : ""}`,
+            query: (body) => `/posts?page=${body.page}${body.searchQuery ? `&searchQuery=${body.searchQuery}` : ""}`,
         }),
 
         getCreatedBlogPosts: builder.query<ApiResult, BlogPostsFetchExpectedData>({
-            query: (body) => `/posts/created?page=${body.page}${body.searchQuery ? `&searchQuery=${body.searchQuery}` : ""}${body._t ? `&_t=${body._t}` : ""}`,
+            query: (body) => `/posts/created?page=${body.page}${body.searchQuery ? `&searchQuery=${body.searchQuery}` : ""}`,
         }),
 
         getLikedBlogPosts: builder.query<ApiResult, BlogPostsFetchExpectedData>({
-            query: (body) => `/posts/liked?page=${body.page}${body.searchQuery ? `&searchQuery=${body.searchQuery}` : ""}${body._t ? `&_t=${body._t}` : ""}`,
+            query: (body) => `/posts/liked?page=${body.page}${body.searchQuery ? `&searchQuery=${body.searchQuery}` : ""}`,
         }),
 
         getArchivedBlogPosts: builder.query<ApiResult, BlogPostsFetchExpectedData>({
-            query: (body) => `/posts/archived?page=${body.page}${body.searchQuery ? `&searchQuery=${body.searchQuery}` : ""}${body._t ? `&_t=${body._t}` : ""}`,
+            query: (body) => `/posts/archived?page=${body.page}${body.searchQuery ? `&searchQuery=${body.searchQuery}` : ""}`,
         }),
 
         createBlogPost: builder.mutation<ApiResult, {
@@ -95,13 +92,11 @@ const blogPostApi = createApi({
     }), 
 });
 
-
 export const {
     useLazyGetBlogPostsQuery,
     useLazyGetCreatedBlogPostsQuery,
     useLazyGetLikedBlogPostsQuery,
     useLazyGetArchivedBlogPostsQuery,
-
 
     useCreateBlogPostMutation,
     useLikeOrUnlikeBlogPostMutation,

@@ -277,7 +277,7 @@ const PostsPage = (): React.ReactElement => {
             if (searchQuery && searchQuery.trim() !== "") {
                 allBlogPostsDebounceRef.current(page, searchQuery);
             } else {
-                getAllBlogPosts({ page, _t: cacheBuster });
+                getAllBlogPosts({ page });
             }
         }
 
@@ -287,7 +287,7 @@ const PostsPage = (): React.ReactElement => {
             if (searchQuery && searchQuery.trim() !== "") {
                 createdPostsDebounceRef.current(page, searchQuery);
             } else {
-                getCreatedBlogPosts({ page, _t: cacheBuster });
+                getCreatedBlogPosts({ page, });
             }
         }
 
@@ -297,7 +297,7 @@ const PostsPage = (): React.ReactElement => {
             if (searchQuery && searchQuery.trim() !== "") {
                 likedPostsDebounceRef.current(page, searchQuery);
             } else {
-                getLikedBlogPosts({ page, _t: cacheBuster });
+                getLikedBlogPosts({ page });
             }
         }
         // ** Archive Blog Posts ** \\
@@ -306,7 +306,7 @@ const PostsPage = (): React.ReactElement => {
             if (searchQuery && searchQuery.trim() !== "") {
                 archivedPostsDebounceRef.current(page, searchQuery);
             } else {
-                getArchivedBlogPosts({ page, _t: cacheBuster });
+                getArchivedBlogPosts({ page });
             }
         }
     }, [
@@ -332,12 +332,13 @@ const PostsPage = (): React.ReactElement => {
 
 
     // ** UseEffect to handle successful /failure cases for fetching all blog posts ** \\
+    // ** UseEffect to handle successful /failure cases for fetching all blog posts ** \\
     useEffect(() => {
         let isMounted = true;
         const successfullCases = allBlogPostsIsSuccess && !allBlogPostsError && !allBlogPostsError;
         const failureCases = allBlogPostsError && "data" in allBlogPostsError && allBlogPostsIsError && !allBlogPostsIsSuccess;
 
-        if (successfullCases) {
+        if (successfullCases && activeView === "all-posts") { // Add condition
             const typedData = (allBlogPostsData.data as ExpectedPaginationPayload);
             if (isMounted) {
                 dispatch(getBlogPosts(typedData.paginationData.data));
@@ -346,7 +347,7 @@ const PostsPage = (): React.ReactElement => {
             }
         }
 
-        if (failureCases) {
+        if (failureCases && activeView === "all-posts") { // Add condition
             const typedError = (allBlogPostsError.data as ApiResult);
             if (isMounted) callToast("error", typedError.message);
         }
@@ -354,8 +355,8 @@ const PostsPage = (): React.ReactElement => {
     }, [
         allBlogPostsData,
         allBlogPostsError,
-        allBlogPostsError,
         allBlogPostsIsSuccess,
+        activeView, // ADD THIS
         dispatch,
         callToast,
     ]);
@@ -366,7 +367,7 @@ const PostsPage = (): React.ReactElement => {
         const successfullCases = archivedBlogPostsIsSuccess && !archivedBlogPostsIsError && !archivedBlogPostsError;
         const failureCases = !archivedBlogPostsIsSuccess && archivedBlogPostsIsError && archivedBlogPostsError && "data" in archivedBlogPostsError;
 
-        if (successfullCases) {
+        if (successfullCases && activeView === "archived-posts") { // Add condition
             const typedData = (archivedBlogPostsData.data as ExpectedPaginationPayload);
             if (isMounted) {
                 dispatch(fetchBlogPosts({
@@ -378,7 +379,7 @@ const PostsPage = (): React.ReactElement => {
             }
         }
 
-        if (failureCases) {
+        if (failureCases && activeView === "archived-posts") { // Add condition
             const typedError = (archivedBlogPostsError.data as ApiResult);
             if (isMounted) callToast("error", typedError.message);
         }
@@ -387,9 +388,11 @@ const PostsPage = (): React.ReactElement => {
         archivedBlogPostsIsSuccess,
         archivedBlogPostsIsError,
         archivedBlogPostsError,
-        archivedBlogPostsData
+        archivedBlogPostsData,
+        activeView, // ADD THIS
+        dispatch,
+        callToast,
     ]);
-
 
     // ** UseEffect to handle successful /failure cases for fetching created blog posts ** \\
     useEffect(() => {
@@ -397,8 +400,7 @@ const PostsPage = (): React.ReactElement => {
         const successfullCases = createdBlogPostsIsSuccess && !createdBlogPostsError && !createdBlogPostsIsError;
         const failureCases = !createdBlogPostsIsSuccess && createdBlogPostsError && createdBlogPostsIsError && "data" in createdBlogPostsError;
 
-
-        if (successfullCases) {
+        if (successfullCases && activeView === "my-posts") { // Add condition
             const typedData = (createdBlogPostsData.data as ExpectedPaginationPayload);
             if (isMounted) {
                 dispatch(fetchBlogPosts({
@@ -410,7 +412,7 @@ const PostsPage = (): React.ReactElement => {
             }
         };
 
-        if (failureCases) {
+        if (failureCases && activeView === "my-posts") { // Add condition
             const typedError = (createdBlogPostsError.data as ApiResult);
             if (isMounted) callToast("error", typedError.message);
         };
@@ -421,10 +423,10 @@ const PostsPage = (): React.ReactElement => {
         createdBlogPostsError,
         createdBlogPostsIsError,
         createdBlogPostsIsSuccess,
+        activeView, // ADD THIS
         dispatch,
         callToast,
     ]);
-
 
     // ** UseEffect to handle successful /failure cases for fetching liked blog posts ** \\
     useEffect(() => {
@@ -432,20 +434,19 @@ const PostsPage = (): React.ReactElement => {
         const successfullCases = likedBlogPostsIsSuccess && !likedBlogPostsError && !likedBlogPostsIsError;
         const failureCases = !likedBlogPostsIsSuccess && likedBlogPostsError && likedBlogPostsIsError && "data" in likedBlogPostsError;
 
-        if (successfullCases) {
+        if (successfullCases && activeView === "liked-posts") { // Add condition
             const typedData = (likedBlogPostsData.data as ExpectedPaginationPayload);
             if (isMounted) {
                 dispatch(fetchBlogPosts({
                     blogPosts: typedData.paginationData.data,
                     postType: "likedBlogPosts"
                 }));
-
                 setTotalPages(typedData.paginationData.totalPages);
                 scrollToMainDivTop();
             }
         };
 
-        if (failureCases) {
+        if (failureCases && activeView === "liked-posts") { // Add condition
             const typedError = (likedBlogPostsError.data as ApiResult);
             if (isMounted) callToast("error", typedError.message);
         };
@@ -456,6 +457,7 @@ const PostsPage = (): React.ReactElement => {
         likedBlogPostsError,
         likedBlogPostsIsError,
         likedBlogPostsIsSuccess,
+        activeView,
         dispatch,
         callToast,
     ]);

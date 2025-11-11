@@ -457,7 +457,7 @@ const PostView = React.memo(({ postId, onClose }: {
         if (onClose) return onClose();
     }
     return (
-        isPostFetchOperationHappening || !postBeingViewed || !postBeingViewed.author ? (
+        isPostFetchOperationHappening || !postBeingViewed ? (
             <div
                 className="w-full h-full flex justify-center items-center lg:rounded-sm"
             >

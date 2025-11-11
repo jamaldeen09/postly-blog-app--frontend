@@ -143,10 +143,7 @@ const PostView = React.memo(({ postId, onClose }: {
 
     // **  State to handle comments page ** \\
     const [commentsPage, setCommentsPage] = useState<string>("1");
-    const [isArchivedErr, setIsArchivedErr] = useState<{ error: boolean; message: string; }>({
-        error: false,
-        message: "",
-    })
+
 
     // ** UseEffect to handle both successfully and error cases in single post fetch ** \\
     React.useEffect(() => {
@@ -158,22 +155,15 @@ const PostView = React.memo(({ postId, onClose }: {
             if (isMounted) {
                 setPostBeingViewed(typedExpectedData.post);
 
+                console.log("DATA FROM API: ", typedExpectedData)
                 // ** Fetch comments immediately after successful blog post fetch ** \\
-                getBlogPostComments({ postId, page: commentsPage })
+                getBlogPostComments({ postId, page: commentsPage });
             }
         }
 
         if (!isSuccessSingleBlogPost && isErrorSingleBlogPost && errorSingleBlogPost && "data" in errorSingleBlogPost) {
             const typedExpectedError = errorSingleBlogPost.data as ApiResult;
-            const errorStatusCode = errorSingleBlogPost.status;
 
-            if (errorStatusCode === 406) {
-                setIsArchivedErr((prevState) => ({
-                    ...prevState,
-                    error: true,
-                    message: typedExpectedError.message,
-                }));
-            }
 
             if (isMounted) {
                 callToast("error", typedExpectedError.message);
@@ -456,23 +446,51 @@ const PostView = React.memo(({ postId, onClose }: {
 
     const { isDesiredScreen } = useResizer(1024);
 
+    const refethchAllPosts = () => {
+        const params = new URLSearchParams(searchParams.toString());
+        params.delete('all-posts-page');
+        params.delete('created-posts-page');
+        params.delete('liked-posts-page');
+        params.set('all-posts-page', '1');
+        router.push(`?${params.toString()}`, { scroll: false });
+
+        if (onClose) return onClose();
+    }
     return (
-        isArchivedErr.error ? (
-            <div
-                className="w-full h-full flex justify-center items-center lg:rounded-sm"
-            >
-                <div
-                    className="flex justify-center items-center bg-yellow-100 rounded-xl h-20 w-full max-w-md
-                    text-yellow-600 text-sm border border-yellow-600"
-                >
-                    {isArchivedErr.message}
-                </div>
-            </div>
-        ) : isPostFetchOperationHappening || !postBeingViewed || !postBeingViewed.author ? (
+        isPostFetchOperationHappening || !postBeingViewed || !postBeingViewed.author ? (
             <div
                 className="w-full h-full flex justify-center items-center lg:rounded-sm"
             >
                 <CustomSpinner className="size-6" />
+            </div>
+        ) : postBeingViewed?.isArchived ? (
+            <div
+                className="w-full h-full flex flex-col lg:rounded-sm"
+            >
+                <header
+                    className="flex items-center justify-end p-6"
+                >
+                    {isDesiredScreen && (
+                        <Button
+                            // onClick={() => mutateTrigger("postViewModal", false)}
+                            variant="outline"
+                            size="sm"
+                            className="cursor-pointer"
+                            onClick={refethchAllPosts}
+                            aria-label="Close"
+                        >
+                            Close
+                        </Button>
+                    )}
+                </header>
+                <main className="flex-1 flex justify-center items-center">
+                    <div
+                        className="flex justify-center items-center bg-yellow-100 rounded-xl h-20 w-full max-w-md
+                    text-yellow-600 text-sm border border-yellow-600"
+                    >
+                        This post has been archived by It&#39;s creator
+                    </div>
+                </main>
             </div>
         ) : postFetchOperationError ? (
             <div
@@ -486,7 +504,7 @@ const PostView = React.memo(({ postId, onClose }: {
                 </div>
             </div>
         ) : (
-            <div ref={commentsDivRef} className="h-full flex flex-col  lg:flex-row overflow-y-auto lg:overflow-hidden lg:rounded-sm">
+            <div ref={commentsDivRef} onClick={postBeingViewed.isArchived ? refethchAllPosts : () => { }} className="h-full flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden lg:rounded-sm">
                 {/* Main Content - Scrolls independently only on desktop (lg and above) */}
                 <main className="flex-1 lg:overflow-y-auto bg-white">
                     <header className="sticky top-0 border-b border-gray-200 px-4 sm:px-6 py-4 bg-white z-10">
@@ -523,7 +541,6 @@ const PostView = React.memo(({ postId, onClose }: {
 
                                 {isDesiredScreen && (
                                     <Button
-                                        // onClick={() => mutateTrigger("postViewModal", false)}
                                         variant="ghost"
                                         size="icon-sm"
                                         className="cursor-pointer"

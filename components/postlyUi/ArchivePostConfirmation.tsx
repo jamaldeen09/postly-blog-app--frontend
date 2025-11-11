@@ -23,6 +23,7 @@ const ArchivePostConfirmation = React.memo(({ postId }: { postId: string }): Rea
         isError,
         error,
         isSuccess,
+        data
     }] = useArchiveOrUnArchiveBlogPostMutation();
 
     const handleArchive = async () => {
@@ -58,6 +59,7 @@ const ArchivePostConfirmation = React.memo(({ postId }: { postId: string }): Rea
     // ** Handle success/error states **\\
     React.useEffect(() => {
         if (isSuccess) {
+            callToast("success", data.message);
             switchToArchivedPosts();
             setActiveView("archived-posts");
             getArchivedBlogPosts({ page: "1" })
@@ -68,7 +70,7 @@ const ArchivePostConfirmation = React.memo(({ postId }: { postId: string }): Rea
             const typedError = error.data as ApiResult;
             callToast("error", typedError.message);
         }
-    }, [isSuccess, isError, error, callToast]);
+    }, [isSuccess, isError, error, callToast, data]);
 
     return (
         <div className="flex flex-col h-full rounded-sm">

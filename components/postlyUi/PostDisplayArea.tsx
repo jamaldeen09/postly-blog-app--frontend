@@ -147,7 +147,7 @@ const PostDisplayArea = React.memo((props: PostDisplayAreaProps): React.ReactEle
         return mutateTrigger("archivePostConfirmationModal", true)
     };
 
-    const [getArchivedBlogPosts, { isLoading: isLoadingArchivedPosts, }] = useLazyGetArchivedBlogPostsQuery();
+    const [getArchivedBlogPosts] = useLazyGetArchivedBlogPostsQuery();
 
 
     const [archiveBlogPost, {
@@ -171,12 +171,11 @@ const PostDisplayArea = React.memo((props: PostDisplayAreaProps): React.ReactEle
         }
     }
 
-    React.useEffect(() => console.log(isLoadingArchivedPosts), [isLoadingArchivedPosts])
-
     // ** UseEffect to handle unarchiving blog posts ** \\
     React.useEffect(() => {
         if (isSuccess) {
             // ** Reset to page 1 in URL when unarchiving from archived posts ** \\
+            callToast("success", data.message);
             updatePageInURL('archived-posts', '1');
             getArchivedBlogPosts({ page: "1" });
         }
@@ -185,7 +184,7 @@ const PostDisplayArea = React.memo((props: PostDisplayAreaProps): React.ReactEle
             const typedError = error.data as ApiResult;
             callToast("error", typedError.message);
         }
-    }, [isSuccess, isError, error, data]);
+    }, [isSuccess, isError, error, data, callToast]);
 
     return (
         props.isFetchingPosts ? (

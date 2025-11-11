@@ -15,6 +15,8 @@ import { ApiResult } from "@/types/auth";
 import CustomSpinner from "../reusableUi/CustomSpinner";
 import { PaginationContext } from "@/app/postly/layout";
 import { useRouter, useSearchParams } from "next/navigation";
+import { XIcon } from "lucide-react";
+import useResizer from "@/hooks/useResizer";
 
 const PostCreation = (): React.ReactElement => {
   const { schema } = useBlogPostCreationSchema();
@@ -101,19 +103,41 @@ const PostCreation = (): React.ReactElement => {
     }
 
     return () => { isMounted = false }
-  }, [isSuccess, isError, error, isLoading, data, callToast])
+  }, [isSuccess, isError, error, isLoading, data, callToast]);
+
+  const { isDesiredScreen } = useResizer(1024)
   return (
     <Form {...postCreationForm}>
-      <form onSubmit={postCreationForm.handleSubmit(onSubmit)} className="space-y-6 rounded-sm">
+      <form onSubmit={postCreationForm.handleSubmit(onSubmit)} className="space-y-6 lg:rounded-sm">
         {/* Header */}
-        <header className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-3">
-            Create New Post
-          </h1>
-          <p className="text-gray-600">
-            Share your thoughts and ideas with the community
-          </p>
-        </header>
+        {isDesiredScreen && (
+          <nav
+            className="flex items-center justify-between  border-b border-gray-200 py-2"
+          >
+            <h1 className="text-2xl font-bold text-gray-900">
+              Create New Post
+            </h1>
+            <Button
+              type="button"
+              onClick={() => mutateTrigger("postCreationModal", false)}
+              size="icon-sm"
+              className="cursor-pointer"
+            >
+              <XIcon />
+            </Button>
+          </nav>
+        )}
+
+        {!isDesiredScreen && (
+          <header className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-3">
+              Create New Post
+            </h1>
+            <p className="text-gray-600">
+              Share your thoughts and ideas with the community
+            </p>
+          </header>
+        )}
 
         {/* Extra errors */}
         {errors && errors.length > 0 && (

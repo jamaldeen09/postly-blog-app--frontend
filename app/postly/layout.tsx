@@ -9,6 +9,7 @@ import ProtectedRoute from "@/providers/ProtectedRoute";
 import React, { useState } from "react";
 import { createContext } from "react";
 import ArchivePostConfirmation from "@/components/postlyUi/ArchivePostConfirmation";
+import useResizer from "@/hooks/useResizer";
 
 
 interface PaginationContextType {
@@ -54,6 +55,7 @@ const Layout = ({ children }: {
   const [postId, setPostId] = useState<string>("");
   const [archivePostId, setArchivePostId] = useState<string>("");
   const [totalComments, setTotalComments] = useState<number>(0);
+  const { isDesiredScreen } = useResizer(1024)
   return (
     <ProtectedRoute>
       <ProfileProvider>
@@ -80,8 +82,8 @@ const Layout = ({ children }: {
             position="fixed"
             animationType="scale-into-view"
             trigger={getTrigger("postCreationModal")}
-            overlayStyles="z-100 bg-black/70 min-h-screen flex justify-center py-6 items-center px-4"
-            modalStyles="w-full bg-white max-w-2xl h-full max-h-[80vh] overflow-y-auto rounded-sm p-8 md:p-10 element-scrollable-hidden-scrollbar"
+            overlayStyles="z-100 bg-black/70 min-h-screen flex justify-center items-center"
+            modalStyles={`w-full bg-white h-full ${isDesiredScreen ? "p-6" : "max-h-[80vh] max-w-2xl p-10"} lg:rounded-sm  element-scrollable-hidden-scrollbar`}
             triggerName="postCreationModal"
             funcToMutateTrigger={mutateTrigger}
           >

@@ -274,7 +274,7 @@ const PostView = React.memo(({ postId, onClose }: {
                         router.push(`?${params.toString()}`, { scroll: false });
 
                         // ** Refetch liked blog posts ** \\\
-                        fetchLikedBlogPosts({ page: "1" })
+                        fetchLikedBlogPosts({ page: "1", _t: Date.now() });
                     }
                 }
             }
@@ -456,6 +456,8 @@ const PostView = React.memo(({ postId, onClose }: {
 
         if (onClose) return onClose();
     }
+
+
     return (
         isPostFetchOperationHappening || !postBeingViewed ? (
             <div

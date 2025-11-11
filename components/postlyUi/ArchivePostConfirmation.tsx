@@ -62,7 +62,7 @@ const ArchivePostConfirmation = React.memo(({ postId }: { postId: string }): Rea
             callToast("success", data.message);
             switchToArchivedPosts();
             setActiveView("archived-posts");
-            getArchivedBlogPosts({ page: "1" })
+            getArchivedBlogPosts({ page: "1", _t: Date.now() })
             mutateTrigger("archivePostConfirmationModal", false)
         }
 

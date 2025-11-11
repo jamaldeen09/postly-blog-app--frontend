@@ -114,7 +114,7 @@ const PostDisplayArea = React.memo((props: PostDisplayAreaProps): React.ReactEle
                     if (isMounted) {
                         // ** Reset to page 1 in URL when unliking from liked posts ** \\
                         updatePageInURL('liked-posts', '1');
-                        getLikedPosts({ page: "1" });
+                        getLikedPosts({ page: "1", _t: Date.now() });
                     }
                 }
             }

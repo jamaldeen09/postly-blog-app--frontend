@@ -530,7 +530,7 @@ const PostsPage = (): React.ReactElement => {
                 <div className="mb-6">
                     <p className="text-sm text-gray-500">
                         Showing {getTotalPostsConditionally()} {getTotalPostsConditionally() === 1 ? 'post' : 'posts'}
-                        {searchQuery && ` for "${searchQuery}"`}
+                        {searchQuery && ` for "${searchQuery}"`}{" "}
                         {activeView === "liked-posts" ? " in your liked blog posts" :
                             activeView === "my-posts" ? " in your created blog posts" :
                                 activeView === "archived-posts" ? "in your archived blog posts" : ""}

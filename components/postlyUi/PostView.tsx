@@ -455,7 +455,7 @@ const PostView = React.memo(({ postId, onClose }: {
     ]);
 
     const { isDesiredScreen } = useResizer(1024);
-    React.useEffect(() => console.log("POSTS AUTHOR: ", postBeingViewed?.author), [postBeingViewed])
+
     return (
         isArchivedErr.error ? (
             <div

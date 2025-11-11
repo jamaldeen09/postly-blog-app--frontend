@@ -83,7 +83,7 @@ const Layout = ({ children }: {
             animationType="scale-into-view"
             trigger={getTrigger("postCreationModal")}
             overlayStyles="z-100 bg-black/70 min-h-screen flex justify-center items-center"
-            modalStyles={`w-full bg-white h-full ${isDesiredScreen ? "p-6" : "max-h-[80vh] max-w-2xl p-10"} lg:rounded-sm  element-scrollable-hidden-scrollbar`}
+            modalStyles={`w-full bg-white h-full overflow-y-auto ${isDesiredScreen ? "p-6" : "max-h-[80vh] max-w-2xl p-10"} lg:rounded-sm  element-scrollable-hidden-scrollbar`}
             triggerName="postCreationModal"
             funcToMutateTrigger={mutateTrigger}
           >

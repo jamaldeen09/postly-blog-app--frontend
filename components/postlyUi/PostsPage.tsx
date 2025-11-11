@@ -498,7 +498,7 @@ const PostsPage = (): React.ReactElement => {
 
     const viewDescriptions = {
         "all-posts": "Discover insights and stories from our community",
-        "my-posts": "Manage and edit your published content",
+        "my-posts": "Manage your published content",
         "liked-posts": "Posts you've liked and saved for later",
         "archived-posts": "Posts you've archived and hidden from public view"
     };

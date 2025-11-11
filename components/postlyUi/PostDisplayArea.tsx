@@ -177,7 +177,7 @@ const PostDisplayArea = React.memo((props: PostDisplayAreaProps): React.ReactEle
             // ** Reset to page 1 in URL when unarchiving from archived posts ** \\
             callToast("success", data.message);
             updatePageInURL('archived-posts', '1');
-            getArchivedBlogPosts({ page: "1" });
+            // getArchivedBlogPosts({ page: "1" });
         }
 
         if (isError && error && "data" in error) {

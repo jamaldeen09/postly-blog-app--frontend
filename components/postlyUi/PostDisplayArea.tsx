@@ -44,7 +44,7 @@ const PostDisplayArea = React.memo((props: PostDisplayAreaProps): React.ReactEle
     // ** RTK query to refetch liked blog posts after unliking a blog post ** \\
     const [getLikedPosts] = useLazyGetLikedBlogPostsQuery()
 
-    const { setPostId, postId, setArchivePostId } = useContext(PaginationContext)
+    const { setPostId, postId, setArchivePostId, setActiveView } = useContext(PaginationContext)
 
     // ** Helper function to update URL with new page ** \\
     const updatePageInURL = (pageType: 'all-posts' | 'created-posts' | 'liked-posts' | 'archived-posts', page: string) => {
@@ -176,8 +176,11 @@ const PostDisplayArea = React.memo((props: PostDisplayAreaProps): React.ReactEle
         if (isSuccess) {
             // ** Reset to page 1 in URL when unarchiving from archived posts ** \\
             callToast("success", data.message);
+
+            
             updatePageInURL('archived-posts', '1');
-            // getArchivedBlogPosts({ page: "1" });
+            setActiveView("archived-posts");
+            getArchivedBlogPosts({ page: "1" });
         }
 
         if (isError && error && "data" in error) {

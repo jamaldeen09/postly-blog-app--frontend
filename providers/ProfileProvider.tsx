@@ -32,7 +32,6 @@ const ProfileProvider = React.memo(({ children }: {
             const typedData = (data.data as { profile: Omit<User["profile"], "createdBlogPosts"> });
             if (isMounted)  {
                 setUserProfile(typedData?.profile);
-                console.log("PROFILE FETCHED DATA RECEIVED:  ", typedData);
             }
         };
 

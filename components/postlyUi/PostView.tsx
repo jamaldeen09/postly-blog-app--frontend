@@ -155,7 +155,6 @@ const PostView = React.memo(({ postId, onClose }: {
             if (isMounted) {
                 setPostBeingViewed(typedExpectedData.post);
 
-                console.log("DATA FROM API: ", typedExpectedData)
                 // ** Fetch comments immediately after successful blog post fetch ** \\
                 getBlogPostComments({ postId, page: commentsPage });
             }
